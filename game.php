@@ -1,8 +1,10 @@
 <?php
-session_start();
 
 require_once __DIR__ . '/classes/Game.php';
 require_once __DIR__ . '/classes/Player.php';
+
+
+session_start();
 
 if (!isset($_SESSION['game'], $_SESSION['player_id'])) {
     header('Location: index.php');
@@ -16,19 +18,19 @@ $game = $_SESSION['game'];
 $game->clearMismatched();
 
 if (isset($_GET['flip'])) {
-    $index = (int)$_GET['flip'];
+    $index = (int) $_GET['flip'];
     $game->flipCard($index);
 
     if ($game->isFinished()) {
         $score = $game->getScore();
-        $playerId = (int)$_SESSION['player_id'];
+        $playerId = (int) $_SESSION['player_id'];
 
         Player::saveScore($playerId, $game->pairs, $game->moves, $score);
 
         $_SESSION['last_score'] = [
             'moves' => $game->moves,
             'pairs' => $game->pairs,
-            'score' => $score
+            'score' => $score,
         ];
 
         unset($_SESSION['game']); // partie terminée
@@ -38,13 +40,14 @@ if (isset($_GET['flip'])) {
 
     // On sauvegarde l'état mis à jour de la partie
     $_SESSION['game'] = $game;
+
     // Redirection pour éviter le re-submit
     header('Location: game.php');
     exit;
 }
 
-$username = $_SESSION['username'] ?? 'Joueur';
-$cards = $game->cards;
+$username   = $_SESSION['username'] ?? 'Joueur';
+$cards      = $game->cards;
 $totalCards = count($cards);
 ?>
 <!doctype html>
