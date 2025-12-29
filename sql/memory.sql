@@ -1,0 +1,22 @@
+CREATE DATABASE IF NOT EXISTS memory
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE memory;
+
+CREATE TABLE IF NOT EXISTS players (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS scores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    pairs INT NOT NULL,
+    moves INT NOT NULL,
+    score FLOAT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_scores_player
+        FOREIGN KEY (player_id) REFERENCES players(id)
+        ON DELETE CASCADE
+);
